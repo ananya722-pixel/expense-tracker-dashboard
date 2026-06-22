@@ -1,15 +1,15 @@
 # Expense Tracker Dashboard
 
-A beginner-friendly expense tracking application built with Python and Streamlit.
+A simple expense tracking application built using Python, Pandas, Matplotlib, and Streamlit.
 
 ## Features
 
 * Add expenses
 * View all expenses
 * Calculate total spending
-* Category-wise expense summary
-* Expense visualization using charts
-* Interactive Streamlit dashboard
+* Category-wise summary
+* Bar chart visualization
+* Pie chart visualization
 
 ## Technologies Used
 
@@ -17,23 +17,36 @@ A beginner-friendly expense tracking application built with Python and Streamlit
 * Pandas
 * Matplotlib
 * Streamlit
-* CSV File Storage
+* Git & GitHub
 
-## Run the Dashboard
+## How to Run
 
-```bash
+1. Create a virtual environment
+2. Install requirements
+3. Run:
+
 streamlit run dashboard.py
-```
-
-## Run the Terminal Version
-
-```bash
-python app.py
-```
 
 ## Future Improvements
 
-* Expense filtering
-* Monthly reports
-* AI expense categorization
-* Bank statement import
+Planned features for upcoming versions:
+
+* Add category-wise expense filtering
+* Add date range filtering
+* Add CSV export/download functionality
+* Add monthly spending analysis
+* Add budget tracking and alerts
+* Add expense search functionality
+* Improve dashboard UI and styling
+* Deploy the application online using Streamlit Cloud
+
+## Version History
+
+### Version 1.0
+
+* Add expenses
+* View expenses
+* Show total spending
+* Category summary
+* Bar chart visualization
+* Pie chart visualization
