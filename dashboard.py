@@ -2,29 +2,60 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-st.title("Expense Tracker Dashboard")
+# Page Title
+st.title("💰 Expense Tracker Dashboard")
 
-# Read CSV
+# Read CSV file
 df = pd.read_csv("expenses.csv")
 
-# Show data
-st.subheader("All Expenses")
-st.dataframe(df)
+# ==========================
+# Category Filter
+# ==========================
 
-# Total spending
-total = df["Amount"].astype(float).sum()
+st.subheader("Filter Expenses")
+
+category = st.selectbox(
+    "Select Category",
+    ["All"] + list(df["Category"].unique())
+)
+
+if category == "All":
+    filtered_df = df
+else:
+    filtered_df = df[df["Category"] == category]
+
+# Show filtered data
+st.subheader("Expenses")
+st.dataframe(filtered_df)
+
+# ==========================
+# Total Spending
+# ==========================
+
+total = filtered_df["Amount"].astype(float).sum()
+
 st.metric("Total Spending", f"₹{total}")
 
-# Category summary
-st.subheader("Expense By Category")
-summary = df.groupby("Category")["Amount"].sum()
+# ==========================
+# Category Summary
+# ==========================
+
+summary = filtered_df.groupby("Category")["Amount"].sum()
+
+st.subheader("Expense by Category")
 st.write(summary)
 
-# Bar chart
+# ==========================
+# Bar Chart
+# ==========================
+
 st.subheader("Bar Chart")
 st.bar_chart(summary)
 
-# Pie chart
+# ==========================
+# Pie Chart
+# ==========================
+
 st.subheader("Pie Chart")
 
 fig, ax = plt.subplots()
@@ -32,7 +63,8 @@ fig, ax = plt.subplots()
 ax.pie(
     summary,
     labels=summary.index,
-    autopct="%1.1f%%"
+    autopct="%1.1f%%",
+    startangle=90
 )
 
 ax.set_title("Expenses by Category")
