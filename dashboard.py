@@ -2,17 +2,25 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
+# -------------------------------
 # Page Title
+# -------------------------------
+st.set_page_config(page_title="Expense Tracker Dashboard", page_icon="💰")
+
 st.title("💰 Expense Tracker Dashboard")
 
-# Read CSV file
+# -------------------------------
+# Read CSV File
+# -------------------------------
 df = pd.read_csv("expenses.csv")
 
-# ==========================
-# Category Filter
-# ==========================
+# Convert Amount column to float
+df["Amount"] = df["Amount"].astype(float)
 
-st.subheader("Filter Expenses")
+# -------------------------------
+# Category Filter
+# -------------------------------
+st.subheader("📂 Filter Expenses")
 
 category = st.selectbox(
     "Select Category",
@@ -24,41 +32,70 @@ if category == "All":
 else:
     filtered_df = df[df["Category"] == category]
 
-# Show filtered data
-st.subheader("Expenses")
+# -------------------------------
+# Display Expenses
+# -------------------------------
+st.subheader("📋 Expenses")
 st.dataframe(filtered_df)
 
-# ==========================
-# Total Spending
-# ==========================
+# -------------------------------
+# Budget Tracker
+# -------------------------------
+st.subheader("💵 Budget Tracker")
 
-total = filtered_df["Amount"].astype(float).sum()
+budget = st.number_input(
+    "Enter Monthly Budget (₹)",
+    min_value=0.0,
+    value=5000.0,
+    step=500.0
+)
 
-st.metric("Total Spending", f"₹{total}")
+total = filtered_df["Amount"].sum()
 
-# ==========================
+remaining = budget - total
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.metric("Total Spending", f"₹{total:.2f}")
+
+with col2:
+    st.metric("Remaining Budget", f"₹{remaining:.2f}")
+
+progress = total / budget if budget > 0 else 0
+
+if progress > 1:
+    progress = 1
+
+st.progress(progress)
+
+if total > budget:
+    st.error("⚠️ Budget Exceeded!")
+else:
+    st.success("✅ You are within your budget.")
+
+# -------------------------------
 # Category Summary
-# ==========================
+# -------------------------------
+st.subheader("📊 Expense By Category")
 
 summary = filtered_df.groupby("Category")["Amount"].sum()
 
-st.subheader("Expense by Category")
 st.write(summary)
 
-# ==========================
+# -------------------------------
 # Bar Chart
-# ==========================
+# -------------------------------
+st.subheader("📈 Bar Chart")
 
-st.subheader("Bar Chart")
 st.bar_chart(summary)
 
-# ==========================
+# -------------------------------
 # Pie Chart
-# ==========================
+# -------------------------------
+st.subheader("🥧 Pie Chart")
 
-st.subheader("Pie Chart")
-
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(6, 6))
 
 ax.pie(
     summary,
