@@ -10,6 +10,8 @@ A simple expense tracking application built using Python, Pandas, Matplotlib, an
 * Category-wise summary
 * Bar chart visualization
 * Pie chart visualization
+* Expense Category
+* Budget Tracker
 
 ## Technologies Used
 
