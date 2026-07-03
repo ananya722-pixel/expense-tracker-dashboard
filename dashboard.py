@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # -------------------------------
-# Page Title
+# Page Configuration
 # -------------------------------
 st.set_page_config(page_title="Expense Tracker Dashboard", page_icon="💰")
 
@@ -33,9 +33,30 @@ else:
     filtered_df = df[df["Category"] == category]
 
 # -------------------------------
+# Dashboard Metrics
+# -------------------------------
+total_spending = filtered_df["Amount"].sum()
+total_transactions = len(filtered_df)
+total_categories = filtered_df["Category"].nunique()
+
+st.subheader("📊 Dashboard Metrics")
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.metric("💰 Total Spending", f"₹{total_spending:.2f}")
+
+with col2:
+    st.metric("🧾 Transactions", total_transactions)
+
+with col3:
+    st.metric("📂 Categories", total_categories)
+
+# -------------------------------
 # Display Expenses
 # -------------------------------
 st.subheader("📋 Expenses")
+
 st.dataframe(filtered_df)
 
 # -------------------------------
@@ -50,26 +71,24 @@ budget = st.number_input(
     step=500.0
 )
 
-total = filtered_df["Amount"].sum()
-
-remaining = budget - total
+remaining = budget - total_spending
 
 col1, col2 = st.columns(2)
 
 with col1:
-    st.metric("Total Spending", f"₹{total:.2f}")
+    st.metric("💵 Budget", f"₹{budget:.2f}")
 
 with col2:
-    st.metric("Remaining Budget", f"₹{remaining:.2f}")
+    st.metric("💸 Remaining Budget", f"₹{remaining:.2f}")
 
-progress = total / budget if budget > 0 else 0
+progress = total_spending / budget if budget > 0 else 0
 
 if progress > 1:
     progress = 1
 
 st.progress(progress)
 
-if total > budget:
+if total_spending > budget:
     st.error("⚠️ Budget Exceeded!")
 else:
     st.success("✅ You are within your budget.")
